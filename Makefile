@@ -3,7 +3,7 @@ ARCH := $(shell case $$(uname -m) in (x86_64) echo amd64 ;; (aarch64) echo arm64
 
 BIN_DIR := ./.bin
 
-TINYGO_VERSION := 0.28.1
+TINYGO_VERSION := 0.30.0
 TINYGO := $(abspath $(BIN_DIR)/tinygo-$(TINYGO_VERSION))/bin/tinygo
 
 DOCKER_NETWORK := proxy-wasm-http-cookie-header-convert_default
@@ -45,5 +45,5 @@ build-docker:
 		--volume "$(shell pwd):/workspace" \
 		--user "$(shell id -u):$(shell id -g)" \
 		--workdir /workspace \
-		golang:1.20.7-bookworm \
+		golang:1.21.5-bookworm \
 		make build

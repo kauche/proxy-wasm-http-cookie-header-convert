@@ -90,7 +90,6 @@ func isCookieNameValid(raw string) bool {
 	if raw == "" {
 		return false
 	}
-	proxywasm.LogErrorf("DEBUG: raw: %s", raw)
 	return strings.IndexFunc(raw, isNotToken) < 0
 }
 

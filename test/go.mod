@@ -1,6 +1,6 @@
 module github.com/kauche/proxy-wasm-http-cookie-header-convert/test
 
-go 1.20
+go 1.21
 
 require github.com/110y/echoserver v0.0.0-20220824054727-f836f620659a
 

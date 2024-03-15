@@ -1,12 +1,12 @@
 package internal
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm"
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm/types"
+	"github.com/tidwall/gjson"
 )
 
 var _ types.PluginContext = (*pluginContext)(nil)
@@ -49,10 +49,40 @@ func getPluginConfiguration() (*pluginConfiguration, error) {
 		return nil, errors.New("the plugin configuration is empty")
 	}
 
-	pc := new(pluginConfiguration)
-	if err := json.Unmarshal(config, pc); err != nil {
-		return nil, fmt.Errorf("failed to marshal given plugin configuration: %w", err)
+	if !gjson.ValidBytes(config) {
+		return nil, errors.New("the plugin configuration is not valid JSON")
 	}
 
-	return pc, nil
+	jsonConfig := gjson.ParseBytes(config)
+
+	rulesToConvertCookie := jsonConfig.Get("rules").Array()
+	if len(rulesToConvertCookie) == 0 {
+		return nil, errors.New("the request headers to rename are not found")
+	}
+
+	rules := make([]*convertRules, len(rulesToConvertCookie))
+
+	for i, r := range rulesToConvertCookie {
+		c := r.Get("cookie_name").String()
+		if c == "" {
+			return nil, errors.New("the cookie name for converting is empty")
+		}
+
+		h := r.Get("header_name").String()
+		if h == "" {
+			return nil, errors.New("the header name for converting is empty")
+		}
+
+		p := r.Get("header_value_prefix").String()
+
+		rules[i] = &convertRules{
+			CookieName:        c,
+			HeaderName:        h,
+			HeaderValuePrefix: p,
+		}
+	}
+
+	return &pluginConfiguration{
+		Rules: rules,
+	}, nil
 }

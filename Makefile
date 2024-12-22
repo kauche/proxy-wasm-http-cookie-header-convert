@@ -52,3 +52,14 @@ build-docker:
 		--workdir /workspace \
 		golang:1.21.5-bookworm \
 		make build
+
+.PHONY: build-docker-rust
+build-docker-rust:
+	@docker build -t proxy-wasm-http-cookie-header-convert-rust-builder -f ./Dockerfile .
+	@docker run \
+		--rm \
+		--volume "$(shell pwd):/workspace" \
+		--user "$(shell id -u):$(shell id -g)" \
+		--workdir /workspace \
+		proxy-wasm-http-cookie-header-convert-rust-builder \
+		make build-rust

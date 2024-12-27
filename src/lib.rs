@@ -75,11 +75,11 @@ impl HttpContext for CookieHTTPConverter {
 
 #[derive(Serialize, Deserialize, Clone)]
 struct Config {
-    rules: Vec<CookieConvertionRule>,
+    rules: Vec<CookieConversionRule>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-struct CookieConvertionRule {
+struct CookieConversionRule {
     cookie_name: String,
     header_name: String,
     header_value_prefix: Option<String>,

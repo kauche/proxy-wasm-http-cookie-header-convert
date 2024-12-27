@@ -1,5 +1,5 @@
-use proxy_wasm::traits::*;
-use proxy_wasm::types::*;
+use proxy_wasm::traits::{Context, HttpContext, RootContext};
+use proxy_wasm::types::{Action, ContextType, LogLevel};
 use serde::{Deserialize, Serialize};
 
 #[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]

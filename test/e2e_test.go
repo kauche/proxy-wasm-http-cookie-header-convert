@@ -25,7 +25,7 @@ func TestE2E(t *testing.T) {
 			cookies     []*http.Cookie
 			wantHeaders map[string]string
 		}{
-			"": {
+			"should populate a header with a given prefix": {
 				host: "upstream-1",
 				cookies: []*http.Cookie{
 					{
@@ -37,7 +37,7 @@ func TestE2E(t *testing.T) {
 					"authorization": "bearer 87cc5f79-35f4-46f5-b482-d3b1a52d6c98",
 				},
 			},
-			"x": {
+			"should populate headers if a request has multiple cookies": {
 				host: "upstream-2",
 				cookies: []*http.Cookie{
 					{

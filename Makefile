@@ -37,6 +37,11 @@ test-docker:
 build: $(TINYGO)
 	@$(TINYGO) build -o $(BIN_DIR)/proxy-wasm-http-cookie-header-convert.wasm -scheduler=none -target=wasi .
 
+.PHONY: build-rust
+build-rust:
+	@cargo build --target wasm32-wasip1 --release
+	@cp ./target/wasm32-wasip1/release/proxy_wasm_http_cookie_header_convert.wasm $(BIN_DIR)/proxy-wasm-http-cookie-header-convert.wasm
+
 .PHONY: build-docker
 build-docker:
 	@docker run \
@@ -47,3 +52,14 @@ build-docker:
 		--workdir /workspace \
 		golang:1.21.5-bookworm \
 		make build
+
+.PHONY: build-docker-rust
+build-docker-rust:
+	@docker build -t proxy-wasm-http-cookie-header-convert-rust-builder -f ./Dockerfile .
+	@docker run \
+		--rm \
+		--volume "$(shell pwd):/workspace" \
+		--user "$(shell id -u):$(shell id -g)" \
+		--workdir /workspace \
+		proxy-wasm-http-cookie-header-convert-rust-builder \
+		make build-rust
